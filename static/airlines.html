@@ -1,0 +1,398 @@
+<!-- static/airlines.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Magaya – Airline Overview</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: 1.6rem;
+    }
+    p {
+      margin: 0 0 14px;
+      font-size: 0.9rem;
+      color: #9ca3af;
+    }
+    a.button-link {
+      display: inline-block;
+      margin: 4px 0 16px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: #1d4ed8;
+      color: #f9fafb;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      grid-template-rows: 340px 340px;
+      gap: 18px;
+    }
+    @media (max-width: 980px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+        grid-auto-rows: 340px;
+      }
+    }
+    .card {
+      background: #020617;
+      border-radius: 14px;
+      border: 1px solid #1f2937;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      padding: 12px 12px 8px;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-header h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+    .card-header span {
+      display: block;
+      margin-top: 2px;
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+    .chart-wrapper {
+      flex: 1;
+      position: relative;
+    }
+    .meta {
+      margin-top: 4px;
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <h1>Airline Operations Overview</h1>
+  <p>Weight and volume by airline, with key carrier segments.</p>
+
+  <a href="/" class="button-link">Back to Overview</a>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <h2>Total Weight by Airline</h2>
+        <span>All external carriers (excluding internal fleet).</span>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="allAirlinesChart"></canvas>
+      </div>
+      <div class="meta" id="allAirlinesMeta">Loading…</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Commercial Airlines</h2>
+        <span>Weight by airlines classified as Commercial.</span>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="commercialChart"></canvas>
+      </div>
+      <div class="meta" id="commercialMeta">Loading…</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Conquest vs IBC vs Florida Air</h2>
+        <span>Each group’s airlines ranked by weight.</span>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="groupedCarriersChart"></canvas>
+      </div>
+      <div class="meta" id="groupedCarriersMeta">Loading…</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Airline Weight Over Time</h2>
+        <span>Monthly weight per airline.</span>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="airlinesOverTimeChart"></canvas>
+      </div>
+      <div class="meta" id="airlinesOverTimeMeta">Loading…</div>
+    </div>
+  </div>
+
+  <script>
+    async function fetchJson(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+      return res.json();
+    }
+
+    let allAirlinesChart, commercialChart, groupedCarriersChart, airlinesOverTimeChart;
+
+    async function renderAllAirlines() {
+      const data = await fetchJson("/api/airlines/weight-summary");
+
+      const labels = data.map(d => d.carrier || "Unknown");
+      const weights = data.map(d => d.total_weight ?? 0);
+
+      const totalWeight = weights.reduce((a, b) => a + b, 0);
+
+      document.getElementById("allAirlinesMeta").textContent =
+        `${data.length} airlines · ${totalWeight.toFixed(1)} lb total`;
+
+      const ctx = document.getElementById("allAirlinesChart").getContext("2d");
+      if (allAirlinesChart) allAirlinesChart.destroy();
+
+      allAirlinesChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Chargeable Weight (lb)",
+              data: weights,
+              backgroundColor: "rgba(59, 130, 246, 0.8)"
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "Weight (lb)" }
+            },
+            x: {
+              ticks: { autoSkip: false, maxRotation: 55, minRotation: 0 }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    async function renderCommercialAirlines() {
+      const data = await fetchJson("/api/commercial-airlines/weight-summary");
+
+      const labels = data.map(d => d.carrier || "Unknown");
+      const weights = data.map(d => d.total_weight ?? 0);
+
+      const totalWeight = weights.reduce((a, b) => a + b, 0);
+      document.getElementById("commercialMeta").textContent =
+        `${data.length} commercial airlines · ${totalWeight.toFixed(1)} lb total`;
+
+      const ctx = document.getElementById("commercialChart").getContext("2d");
+      if (commercialChart) commercialChart.destroy();
+
+      commercialChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Commercial Weight (lb)",
+              data: weights,
+              backgroundColor: "rgba(56, 189, 248, 0.85)"
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "Weight (lb)" }
+            },
+            x: {
+              ticks: { autoSkip: false, maxRotation: 55, minRotation: 0 }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    async function renderGroupedCarriers() {
+      const [conquest, ibc, florida] = await Promise.all([
+        fetchJson("/api/conquest-airlines/weight-summary"),
+        fetchJson("/api/ibc-airlines/weight-summary"),
+        fetchJson("/api/floridaair-airlines/weight-summary")
+      ]);
+
+      // Build a combined set of labels
+      const carriers = new Set();
+      conquest.forEach(d => carriers.add(d.carrier || "Unknown"));
+      ibc.forEach(d => carriers.add(d.carrier || "Unknown"));
+      florida.forEach(d => carriers.add(d.carrier || "Unknown"));
+
+      const labels = Array.from(carriers);
+
+      function toMap(arr) {
+        const m = new Map();
+        arr.forEach(d => m.set(d.carrier || "Unknown", d.total_weight ?? 0));
+        return m;
+      }
+
+      const cMap = toMap(conquest);
+      const iMap = toMap(ibc);
+      const fMap = toMap(florida);
+
+      const conquestData = labels.map(l => cMap.get(l) || 0);
+      const ibcData = labels.map(l => iMap.get(l) || 0);
+      const floridaData = labels.map(l => fMap.get(l) || 0);
+
+      const totalConquest = conquestData.reduce((a, b) => a + b, 0);
+      const totalIbc = ibcData.reduce((a, b) => a + b, 0);
+      const totalFlorida = floridaData.reduce((a, b) => a + b, 0);
+
+      document.getElementById("groupedCarriersMeta").textContent =
+        `Conquest: ${totalConquest.toFixed(1)} lb · ` +
+        `IBC: ${totalIbc.toFixed(1)} lb · ` +
+        `Florida Air: ${totalFlorida.toFixed(1)} lb`;
+
+      const ctx = document.getElementById("groupedCarriersChart").getContext("2d");
+      if (groupedCarriersChart) groupedCarriersChart.destroy();
+
+      groupedCarriersChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Conquest",
+              data: conquestData,
+              backgroundColor: "rgba(236, 72, 153, 0.85)"
+            },
+            {
+              label: "IBC",
+              data: ibcData,
+              backgroundColor: "rgba(234, 179, 8, 0.9)"
+            },
+            {
+              label: "Florida Air",
+              data: floridaData,
+              backgroundColor: "rgba(56, 189, 248, 0.9)"
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "Weight (lb)" }
+            },
+            x: {
+              ticks: { autoSkip: false, maxRotation: 55, minRotation: 0 }
+            }
+          },
+          plugins: {
+            legend: { position: "bottom" }
+          }
+        }
+      });
+    }
+
+    async function renderAirlinesOverTime() {
+      const data = await fetchJson("/api/airlines/weight-over-time");
+
+      const monthsSet = new Set();
+      data.forEach(d => {
+        monthsSet.add(`${d.year}-${String(d.month).padStart(2, "0")}`);
+      });
+      const months = Array.from(monthsSet).sort();
+
+      const carriersSet = new Set(data.map(d => d.carrier || "Unknown"));
+      const carriers = Array.from(carriersSet);
+
+      const palette = [
+        "rgba(59, 130, 246, 0.9)",
+        "rgba(236, 72, 153, 0.9)",
+        "rgba(234, 179, 8, 0.9)",
+        "rgba(16, 185, 129, 0.9)",
+        "rgba(147, 51, 234, 0.9)",
+        "rgba(56, 189, 248, 0.9)"
+      ];
+
+      const datasets = carriers.map((carrier, idx) => {
+        const color = palette[idx % palette.length];
+        const values = months.map(key => {
+          const [y, m] = key.split("-");
+          const match = data.find(
+            d =>
+              (d.carrier || "Unknown") === carrier &&
+              d.year === Number(y) &&
+              d.month === Number(m)
+          );
+          return match ? (match.total_weight ?? 0) : 0;
+        });
+
+        return {
+          label: carrier,
+          data: values,
+          borderColor: color,
+          backgroundColor: color.replace("0.9", "0.2"),
+          tension: 0.25,
+          fill: true
+        };
+      });
+
+      const totalWeight = data.reduce((a, d) => a + (d.total_weight ?? 0), 0);
+
+      document.getElementById("airlinesOverTimeMeta").textContent =
+        `${months.length} months · ${carriers.length} airlines · ${totalWeight.toFixed(1)} lb total`;
+
+      const ctx = document.getElementById("airlinesOverTimeChart").getContext("2d");
+      if (airlinesOverTimeChart) airlinesOverTimeChart.destroy();
+
+      airlinesOverTimeChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: months,
+          datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "Weight (lb)" }
+            }
+          },
+          plugins: {
+            legend: { position: "bottom" }
+          }
+        }
+      });
+    }
+
+    async function main() {
+      try {
+        await renderAllAirlines();
+        await renderCommercialAirlines();
+        await renderGroupedCarriers();
+        await renderAirlinesOverTime();
+      } catch (err) {
+        console.error("Airline page error:", err);
+        alert("Failed to load airline charts. Check console and API.");
+      }
+    }
+
+    main();
+  </script>
+</body>
+</html>

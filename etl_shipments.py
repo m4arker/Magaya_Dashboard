@@ -90,7 +90,7 @@ def main():
     print("Transforming....")
     clean_df = transform(raw_df)
 
-    print(f"Loading into SQLite: {DB_FILE}")
+    print(f"Loading into SQLite: {DB_FILE}") 
     load_to_sqlite(clean_df, DB_FILE)
 
     print("Done.")

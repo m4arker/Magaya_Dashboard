@@ -222,7 +222,7 @@
       font-weight: 600;
     }
 
-    /* Filter bar */
+    /* Filter bar – DATA FILTER (date range) */
 
     .filter-bar {
       margin-bottom: 14px;
@@ -234,17 +234,18 @@
       color: #6b7280;
     }
 
-    .filter-bar select,
-    .filter-bar button {
-      font-size: 0.8rem;
+    .filter-label {
+      font-weight: 500;
+      color: #4b5563;
     }
 
-    .filter-select {
+    .filter-input {
       padding: 4px 10px;
       border-radius: 999px;
       border: 1px solid #d1d5db;
       background: #ffffff;
       color: #374151;
+      font-size: 0.8rem;
     }
 
     .filter-apply {
@@ -254,6 +255,7 @@
       background: var(--accent);
       color: #f9fafb;
       cursor: pointer;
+      font-size: 0.8rem;
     }
 
     .filter-clear {
@@ -263,6 +265,7 @@
       background: #ffffff;
       color: #4b5563;
       cursor: pointer;
+      font-size: 0.8rem;
     }
 
     /* Charts grid */
@@ -364,7 +367,7 @@
         <p>Quick view of shipment volume by consignee and weight.</p>
         <div class="hero-metrics">
           <div class="metric">
-            <div class="metric-label">Open Shipments</div>
+            <div class="metric-label">Shipments (filtered)</div>
             <div class="metric-value" id="metricOpenShipments">–</div>
           </div>
           <div class="metric">
@@ -379,14 +382,17 @@
       </div>
     </section>
 
+    <!-- DATA FILTER BAR (date range) -->
     <div class="filter-bar">
-      <span>Status:</span>
-      <select id="statusFilter" class="filter-select">
-        <option value="">All</option>
-        <option value="InProcess">InProcess</option>
-        <option value="Delivered">Delivered</option>
-        <option value="OnHand">OnHand</option>
-      </select>
+      <span class="filter-label">Filter by date:</span>
+      <label>
+        From
+        <input type="date" id="startDate" class="filter-input">
+      </label>
+      <label>
+        To
+        <input type="date" id="endDate" class="filter-input">
+      </label>
       <button id="applyFilter" class="filter-apply">Apply</button>
       <button id="clearFilter" class="filter-clear">Clear</button>
     </div>
@@ -449,17 +455,25 @@
       return res.json();
     }
 
-    function buildUrlWithStatus(base) {
-      const status = document.getElementById("statusFilter").value;
-      if (!status) return base;
+    // Build URL with date filters only (data filter instead of status)
+    function buildUrlWithFilters(base) {
+      const start = document.getElementById("startDate").value;
+      const end = document.getElementById("endDate").value;
+
+      const params = new URLSearchParams();
+      if (start) params.append("start_date", start);
+      if (end) params.append("end_date", end);
+
+      if ([...params].length === 0) return base;
+
       const sep = base.includes("?") ? "&" : "?";
-      return base + sep + "status=" + encodeURIComponent(status);
+      return base + sep + params.toString();
     }
 
     let byConsigneeChart, statusPieChart, volumeChart, carrierChart;
 
-    async function renderByConsignee(status) {
-      const url = buildUrlWithStatus("/api/summary/by-consignee");
+    async function renderByConsignee() {
+      const url = buildUrlWithFilters("/api/summary/by-consignee");
       const data = await fetchJson(url);
 
       const labels = data.map(d => d.consignee || "Unknown");
@@ -527,8 +541,9 @@
       });
     }
 
-    async function renderStatus(status) {
-      const url = buildUrlWithStatus("/api/status/summary");
+    async function renderStatus() {
+      // status endpoint doesn’t take dates, but extra query params are ignored
+      const url = buildUrlWithFilters("/api/status/summary");
       const data = await fetchJson(url);
 
       const labels = data.map(d => d.status || "Unknown");
@@ -577,8 +592,8 @@
       });
     }
 
-    async function renderVolumeByMonth(status) {
-      const url = buildUrlWithStatus("/api/summary/volume-by-month");
+    async function renderVolumeByMonth() {
+      const url = buildUrlWithFilters("/api/summary/volume-by-month");
       const data = await fetchJson(url);
 
       const labels = data.map(d => d.year + "-" + String(d.month).padStart(2, "0"));
@@ -639,8 +654,8 @@
       });
     }
 
-    async function renderCarrierSnapshot(status) {
-      const url = buildUrlWithStatus("/api/airlines/weight-summary");
+    async function renderCarrierSnapshot() {
+      const url = buildUrlWithFilters("/api/airlines/weight-summary");
       const data = await fetchJson(url);
 
       const labels = data.map(d => d.carrier || "Unknown");
@@ -693,7 +708,8 @@
       });
 
       clearBtn.addEventListener("click", () => {
-        document.getElementById("statusFilter").value = "";
+        document.getElementById("startDate").value = "";
+        document.getElementById("endDate").value = "";
         renderAll();
       });
 

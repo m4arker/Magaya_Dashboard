@@ -6,18 +6,14 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --bg-page: #f3f4f6;
-      --bg-shell: #f9fafb;
+      --bg-body: #f3f4f6;
       --bg-header: #020617;
       --bg-card: #020617;
-      --border-card: #111827;
-      --border-subtle: #e5e7eb;
+      --border: #1f2937;
       --accent: #2563eb;
-      --accent-soft: #dbeafe;
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --text-soft: #9ca3af;
+      --text-dark: #0f172a;
       --text-light: #e5e7eb;
+      --text-muted: #9ca3af;
     }
 
     * { box-sizing: border-box; }
@@ -26,12 +22,12 @@
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: radial-gradient(circle at top left, #e5e7eb, #f3f4f6 42%, #e5e7eb 85%);
-      color: var(--text-main);
+      color: var(--text-dark);
     }
 
     a { color: inherit; text-decoration: none; }
 
-    /* NAV */
+    /* Nav */
 
     .nav {
       background: radial-gradient(circle at top left, #1e40af, #020617 60%);
@@ -50,17 +46,17 @@
     }
 
     .nav-logo {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border-radius: 999px;
-      background: conic-gradient(from 180deg, #2563eb, #22c55e, #22c55e, #2563eb);
+      background: linear-gradient(135deg, #2563eb, #22c55e);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: #f9fafb;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.45);
     }
 
     .nav-title {
@@ -71,79 +67,70 @@
     .nav-title span:first-child {
       font-size: 0.95rem;
       font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .nav-title span:last-child {
       font-size: 0.75rem;
-      color: rgba(209, 213, 219, 0.85);
+      color: rgba(209,213,219,0.85);
     }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 0.8rem;
-      color: rgba(209, 213, 219, 0.9);
+      gap: 14px;
+      font-size: 0.85rem;
+      color: rgba(209,213,219,0.9);
     }
 
     .nav-link {
-      padding: 4px 10px;
+      padding: 4px 8px;
       border-radius: 999px;
       border: 1px solid transparent;
-      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
     }
 
     .nav-link.active {
       color: #bfdbfe;
-      border-color: rgba(37, 99, 235, 0.7);
+      border-color: rgba(37, 99, 235, 0.6);
       background: rgba(15, 23, 42, 0.85);
     }
 
-    .nav-link:not(.active):hover {
-      border-color: rgba(148,163,184,0.6);
-      background: rgba(15,23,42,0.6);
-    }
-
-    /* SHELL */
+    /* Shell */
 
     .shell {
       max-width: 1180px;
       margin: 0 auto;
-      padding: 20px 18px 32px;
+      padding: 20px;
     }
 
     .shell-inner {
-      background: var(--bg-shell);
+      background: #f9fafb;
       border-radius: 18px;
-      border: 1px solid var(--border-subtle);
+      border: 1px solid #e5e7eb;
       box-shadow:
-        0 20px 45px rgba(15,23,42,0.18),
+        0 18px 40px rgba(15,23,42,0.18),
         0 0 0 1px rgba(148,163,184,0.08);
       padding: 20px 18px 18px;
     }
 
-    /* HERO */
+    /* Hero */
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
       gap: 18px;
       margin-bottom: 18px;
     }
 
     @media (max-width: 960px) {
-      .hero {
-        grid-template-columns: minmax(0, 1fr);
-      }
+      .hero { grid-template-columns: minmax(0, 1fr); }
     }
 
     .hero-text h1 {
       margin: 0 0 6px;
-      font-size: 1.55rem;
+      font-size: 1.6rem;
       letter-spacing: 0.02em;
-      color: var(--text-main);
+      color: var(--text-dark);
     }
 
     .hero-text p {
@@ -186,31 +173,17 @@
     }
 
     .btn-primary {
-      padding: 7px 16px;
+      padding: 6px 14px;
       border-radius: 999px;
       border: none;
       background: var(--accent);
       color: #f9fafb;
-      font-size: 0.83rem;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.5);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-primary span.icon {
       font-size: 0.85rem;
-      opacity: 0.9;
-    }
-
-    .btn-primary:hover {
-      background: #1d4ed8;
-      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.6);
+      cursor: pointer;
     }
 
     .btn-ghost {
-      padding: 7px 14px;
+      padding: 6px 12px;
       border-radius: 999px;
       border: 1px solid #d1d5db;
       background: #ffffff;
@@ -221,19 +194,16 @@
 
     .hero-panel {
       border-radius: 14px;
-      border: 1px solid var(--border-card);
+      border: 1px solid var(--border);
       background:
-        radial-gradient(circle at top left, rgba(37, 99, 235, 0.24), transparent 58%),
-        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.18), transparent 55%),
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.2), transparent 60%),
         var(--bg-card);
-      padding: 12px 12px 10px;
-      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.9);
+      padding: 12px 12px 8px;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.9);
       color: var(--text-light);
       display: flex;
       flex-direction: column;
       gap: 6px;
-      position: relative;
-      overflow: hidden;
     }
 
     .hero-panel h2 {
@@ -244,22 +214,7 @@
     .hero-panel p {
       margin: 0;
       font-size: 0.8rem;
-      color: var(--text-soft);
-    }
-
-    .hero-panel-meta {
-      margin-top: 4px;
-      font-size: 0.72rem;
-      color: var(--text-soft);
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .hero-panel-meta span strong {
-      color: #e5e7eb;
-      font-weight: 600;
+      color: #9ca3af;
     }
 
     .hero-metrics {
@@ -273,49 +228,43 @@
       padding: 6px 8px;
       border-radius: 10px;
       border: 1px solid rgba(31, 41, 55, 0.9);
-      background: rgba(15, 23, 42, 0.94);
+      background: rgba(15, 23, 42, 0.92);
       font-size: 0.8rem;
     }
 
     .metric-label {
       font-size: 0.7rem;
-      color: var(--text-soft);
+      color: #9ca3af;
     }
 
     .metric-value {
       margin-top: 2px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
     }
 
-    /* FILTER BAR – GLOBAL DATA FILTER */
+    /* Filter bar */
 
-    .filter-shell {
-      border-radius: 12px;
-      border: 1px solid var(--border-subtle);
-      background: #ffffff;
-      padding: 10px 12px;
+    .filter-bar {
       margin-bottom: 14px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 10px 14px;
       font-size: 0.8rem;
+      color: #6b7280;
     }
 
-    .filter-title {
+    .filter-label {
       font-weight: 600;
       color: #111827;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       font-size: 0.75rem;
-    }
-
-    .filter-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
     }
 
     .filter-input {
@@ -328,77 +277,45 @@
     }
 
     .filter-actions {
+      margin-left: auto;
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-left: auto;
       flex-wrap: wrap;
     }
 
-    .btn-filter-primary {
-      padding: 4px 11px;
+    .filter-apply {
+      padding: 4px 10px;
       border-radius: 999px;
       border: none;
       background: var(--accent);
       color: #f9fafb;
       cursor: pointer;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
     }
 
-    .btn-filter-secondary {
-      padding: 4px 11px;
+    .filter-clear {
+      padding: 4px 10px;
       border-radius: 999px;
       border: 1px solid #d1d5db;
       background: #ffffff;
       color: #4b5563;
       cursor: pointer;
-      font-size: 0.78rem;
-    }
-
-    .preset-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-left: 4px;
-    }
-
-    .preset-chip {
-      border-radius: 999px;
-      padding: 3px 9px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      font-size: 0.75rem;
-      color: #4b5563;
-      cursor: pointer;
-    }
-
-    .preset-chip.active {
-      background: var(--accent-soft);
-      border-color: #93c5fd;
-      color: #1d4ed8;
-      font-weight: 500;
-    }
-
-    /* SUMMARY STRIP */
-
-    .summary-strip {
-      margin-bottom: 12px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      font-size: 0.76rem;
-      color: var(--text-muted);
+      font-size: 0.8rem;
     }
 
     .summary-pill {
+      margin: 6px 0 12px;
+      display: inline-block;
       padding: 4px 9px;
       border-radius: 999px;
       background: #eff6ff;
       border: 1px solid #dbeafe;
+      font-size: 0.75rem;
       color: #1e40af;
     }
 
-    /* GRID / CARDS */
+    /* Charts grid */
 
     .grid {
       display: grid;
@@ -408,16 +325,13 @@
     }
 
     @media (max-width: 960px) {
-      .grid {
-        grid-template-columns: minmax(0, 1fr);
-        grid-auto-rows: 320px;
-      }
+      .grid { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 320px; }
     }
 
     .card {
       background: var(--bg-card);
       border-radius: 14px;
-      border: 1px solid var(--border-card);
+      border: 1px solid var(--border);
       padding: 12px 12px 8px;
       box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
       display: flex;
@@ -434,7 +348,7 @@
       display: block;
       margin-top: 2px;
       font-size: 0.78rem;
-      color: var(--text-soft);
+      color: #9ca3af;
     }
 
     .chart-wrapper {
@@ -446,7 +360,7 @@
     .card-meta {
       margin-top: 4px;
       font-size: 0.78rem;
-      color: var(--text-soft);
+      color: #9ca3af;
     }
 
     footer {
@@ -487,7 +401,7 @@
           </div>
           <div class="hero-cta">
             <button class="btn-primary" onclick="window.location.href='/static/airlines.html'">
-              <span class="icon">✈️</span><span>View Airline Overview</span>
+              View Airline Overview
             </button>
             <button class="btn-ghost" onclick="window.location.href='/docs'">
               API Docs
@@ -496,11 +410,7 @@
         </div>
         <div class="hero-panel">
           <h2>Filtered Snapshot</h2>
-          <p>Current view based on date range and presets below.</p>
-          <div class="hero-panel-meta">
-            <span>Range: <strong id="metaRange">All available data</strong></span>
-            <span>Updated from: <strong>Magaya CSV import</strong></span>
-          </div>
+          <p>Current view based on the global date filter.</p>
           <div class="hero-metrics">
             <div class="metric">
               <div class="metric-label">Shipments (filtered)</div>
@@ -518,34 +428,24 @@
         </div>
       </section>
 
-      <!-- GLOBAL DATA FILTER -->
-      <div class="filter-shell">
-        <div class="filter-title">Data filter</div>
-        <div class="filter-group">
-          <label>
-            From
-            <input type="date" id="startDate" class="filter-input">
-          </label>
-          <label>
-            To
-            <input type="date" id="endDate" class="filter-input">
-          </label>
-          <div class="preset-row">
-            <button type="button" class="preset-chip" data-range="7d">Last 7 days</button>
-            <button type="button" class="preset-chip" data-range="30d">Last 30 days</button>
-            <button type="button" class="preset-chip" data-range="mtd">This month</button>
-            <button type="button" class="preset-chip" data-range="ytd">Year to date</button>
-          </div>
-        </div>
+      <!-- Global date filter -->
+      <div class="filter-bar">
+        <span class="filter-label">Data filter</span>
+        <label>
+          From
+          <input type="date" id="startDate" class="filter-input">
+        </label>
+        <label>
+          To
+          <input type="date" id="endDate" class="filter-input">
+        </label>
         <div class="filter-actions">
-          <button id="applyFilter" class="btn-filter-primary">Apply</button>
-          <button id="clearFilter" class="btn-filter-secondary">Clear</button>
+          <button id="applyFilter" class="filter-apply">Apply</button>
+          <button id="clearFilter" class="filter-clear">Clear</button>
         </div>
       </div>
 
-      <div class="summary-strip">
-        <div class="summary-pill" id="summaryFilter">Showing: all data</div>
-      </div>
+      <div id="filterSummary" class="summary-pill">Showing: all data</div>
 
       <section class="grid">
         <div class="card">
@@ -562,7 +462,7 @@
         <div class="card">
           <div class="card-header">
             <h3>Shipment Status</h3>
-            <span>InProcess vs Delivered vs OnHand for the current filter.</span>
+            <span>InProcess vs Delivered vs OnHand (overall).</span>
           </div>
           <div class="chart-wrapper">
             <canvas id="statusPieChart"></canvas>
@@ -606,10 +506,7 @@
       return res.json();
     }
 
-    // Build URL with date filters for endpoints that accept start_date / end_date
-    function buildUrlWithFilters(base, supportsDate) {
-      if (!supportsDate) return base;
-
+    function buildUrlWithDates(base) {
       const start = document.getElementById("startDate").value;
       const end = document.getElementById("endDate").value;
 
@@ -630,32 +527,29 @@
     function updateFilterSummary() {
       const start = document.getElementById("startDate").value;
       const end = document.getElementById("endDate").value;
-      const summaryEl = document.getElementById("summaryFilter");
-      const rangeEl = document.getElementById("metaRange");
+      const el = document.getElementById("filterSummary");
 
       if (!start && !end) {
-        summaryEl.textContent = "Showing: all data";
-        rangeEl.textContent = "All available data";
-        return;
-      }
-
-      if (start && end) {
-        summaryEl.textContent = "Showing: " + start + " → " + end;
-        rangeEl.textContent = start + " to " + end;
+        el.textContent = "Showing: all data";
+      } else if (start && end) {
+        el.textContent = "Showing: " + start + " → " + end;
       } else if (start) {
-        summaryEl.textContent = "Showing: from " + start;
-        rangeEl.textContent = "From " + start;
+        el.textContent = "Showing: from " + start;
       } else if (end) {
-        summaryEl.textContent = "Showing: up to " + end;
-        rangeEl.textContent = "Up to " + end;
+        el.textContent = "Showing: up to " + end;
       }
     }
 
     let byConsigneeChart, statusPieChart, volumeChart, carrierChart;
 
     async function renderByConsignee() {
-      const url = buildUrlWithFilters("/api/summary/by-consignee", true);
+      document.getElementById("byConsigneeMeta").textContent = "Loading…";
+      const url = buildUrlWithDates("/api/summary/by-consignee");
       const data = await fetchJson(url);
+
+      if (!data.length) {
+        document.getElementById("byConsigneeMeta").textContent = "No data for this range.";
+      }
 
       const labels = data.map(d => d.consignee || "Unknown");
       const counts = data.map(d => d.shipment_count || 0);
@@ -667,5 +561,244 @@
 
       document.getElementById("byConsigneeMeta").textContent =
         uniqueConsignees + " consignees · " +
-        formatNumber(totalShipments)
+        formatNumber(totalShipments) + " shipments · " +
+        formatNumber(totalWeight) + " lb";
+
+      document.getElementById("metricShipments").textContent = formatNumber(totalShipments);
+      document.getElementById("metricTotalWeight").textContent = formatNumber(totalWeight);
+      document.getElementById("metricConsignees").textContent = String(uniqueConsignees);
+
+      const ctx = document.getElementById("byConsigneeChart").getContext("2d");
+      if (byConsigneeChart) byConsigneeChart.destroy();
+
+      byConsigneeChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Shipments",
+              data: counts,
+              backgroundColor: "rgba(59, 130, 246, 0.8)"
+            },
+            {
+              label: "Total Weight (lb)",
+              data: weights,
+              type: "line",
+              yAxisID: "y1",
+              borderColor: "rgba(34, 197, 94, 0.95)",
+              backgroundColor: "rgba(34, 197, 94, 0.18)",
+              tension: 0.25
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              ticks: { autoSkip: false, maxRotation: 55, minRotation: 0 },
+              grid: { display: false }
+            },
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "Shipments" }
+            },
+            y1: {
+              beginAtZero: true,
+              position: "right",
+              grid: { drawOnChartArea: false },
+              title: { display: true, text: "Weight (lb)" }
+            }
+          },
+          plugins: { legend: { position: "bottom" } }
+        }
+      });
     }
+
+    async function renderStatus() {
+      document.getElementById("statusMeta").textContent = "Loading…";
+      // This endpoint does NOT support dates in your current backend
+      const url = "/api/status/summary";
+      const data = await fetchJson(url);
+
+      const labels = data.map(d => d.status || "Unknown");
+      const counts = data.map(d => d.shipment_count || 0);
+
+      const total = counts.reduce((a, b) => a + b, 0) || 1;
+
+      document.getElementById("statusMeta").textContent =
+        formatNumber(total) + " shipments · " +
+        data.map(d =>
+          d.status + ": " + d.shipment_count + " (" + d.percentage.toFixed(1) + "%)"
+        ).join(" · ");
+
+      const colorMap = {
+        inprocess: "#3b82f6",
+        delivered: "#22c55e",
+        onhand: "#f97316"
+      };
+      const bg = labels.map(label => {
+        const k = (label || "").toLowerCase();
+        return colorMap[k] || "#64748b";
+      });
+
+      const ctx = document.getElementById("statusPieChart").getContext("2d");
+      if (statusPieChart) statusPieChart.destroy();
+
+      statusPieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels,
+          datasets: [
+            {
+              data: counts,
+              backgroundColor: bg,
+              borderColor: "#020617",
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: "top", labels: { color: "#e5e7eb" } }
+          }
+        }
+      });
+    }
+
+    async function renderVolumeByMonth() {
+      document.getElementById("volumeByMonthMeta").textContent = "Loading…";
+      const url = buildUrlWithDates("/api/summary/volume-by-month");
+      const data = await fetchJson(url);
+
+      const labels = data.map(d => d.year + "-" + String(d.month).padStart(2, "0"));
+      const counts = data.map(d => d.shipment_count || 0);
+      const weights = data.map(d => d.total_weight || 0);
+
+      const totalShipments = counts.reduce((a, b) => a + b, 0);
+      const totalWeight = weights.reduce((a, b) => a + b, 0);
+
+      document.getElementById("volumeByMonthMeta").textContent =
+        labels.length + " months · " +
+        formatNumber(totalShipments) + " shipments · " +
+        formatNumber(totalWeight) + " lb";
+
+      const ctx = document.getElementById("volumeByMonthChart").getContext("2d");
+      if (volumeChart) volumeChart.destroy();
+
+      volumeChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Shipment Count",
+              data: counts,
+              borderColor: "rgba(248, 113, 113, 0.95)",
+              backgroundColor: "rgba(248, 113, 113, 0.2)",
+              tension: 0.25,
+              yAxisID: "y"
+            },
+            {
+              label: "Total Weight (lb)",
+              data: weights,
+              borderColor: "rgba(59, 130, 246, 0.95)",
+              backgroundColor: "rgba(59, 130, 246, 0.2)",
+              tension: 0.25,
+              yAxisID: "y1"
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: { display: true, text: "Shipments" }
+            },
+            y1: {
+              beginAtZero: true,
+              position: "right",
+              grid: { drawOnChartArea: false },
+              title: { display: true, text: "Weight (lb)" }
+            }
+          },
+          plugins: { legend: { position: "bottom" } }
+        }
+      });
+    }
+
+    async function renderCarrierSnapshot() {
+      document.getElementById("carrierSnapshotMeta").textContent = "Loading…";
+      // This endpoint also does NOT take dates currently
+      const url = "/api/airlines/weight-summary";
+      const data = await fetchJson(url);
+
+      const labels = data.map(d => d.carrier || "Unknown");
+      const weights = data.map(d => d.total_weight || 0);
+
+      const totalWeight = weights.reduce((a, b) => a + b, 0);
+
+      document.getElementById("carrierSnapshotMeta").textContent =
+        data.length + " airlines · " + formatNumber(totalWeight) + " lb total";
+
+      const ctx = document.getElementById("carrierSnapshotChart").getContext("2d");
+      if (carrierChart) carrierChart.destroy();
+
+      carrierChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Weight (lb)",
+              data: weights,
+              backgroundColor: "rgba(56, 189, 248, 0.8)"
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true, title: { display: true, text: "Weight (lb)" } },
+            x: { ticks: { autoSkip: false, maxRotation: 55, minRotation: 0 } }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    async function renderAll() {
+      updateFilterSummary();
+      await renderByConsignee();
+      await renderStatus();
+      await renderVolumeByMonth();
+      await renderCarrierSnapshot();
+    }
+
+    function init() {
+      const applyBtn = document.getElementById("applyFilter");
+      const clearBtn = document.getElementById("clearFilter");
+
+      applyBtn.addEventListener("click", () => {
+        renderAll();
+      });
+
+      clearBtn.addEventListener("click", () => {
+        document.getElementById("startDate").value = "";
+        document.getElementById("endDate").value = "";
+        renderAll();
+      });
+
+      renderAll();
+    }
+
+    init();
+  </script>
+</body>
+</html>
